@@ -1,0 +1,7 @@
+[tables.sales]
+name = "Sales"
+
+[tables.sales.columns]
+region = "Region"
+revenue = "Revenue"
+year = "Year"
