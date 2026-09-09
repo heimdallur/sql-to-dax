@@ -1,0 +1,24 @@
+[[case]]
+name = "select_star"
+sql = "SELECT * FROM sales"
+code = "unsupported.star"
+
+[[case]]
+name = "join"
+sql = "SELECT * FROM a JOIN b ON a.id = b.id"
+code = "unsupported.join"
+
+[[case]]
+name = "cte"
+sql = "WITH x AS (SELECT region FROM sales) SELECT region FROM x"
+code = "unsupported.cte"
+
+[[case]]
+name = "window"
+sql = "SELECT region, ROW_NUMBER() OVER (ORDER BY region) FROM sales"
+code = "unsupported.window"
+
+[[case]]
+name = "having"
+sql = "SELECT region, SUM(revenue) FROM sales GROUP BY region HAVING SUM(revenue) > 100"
+code = "unsupported.having"

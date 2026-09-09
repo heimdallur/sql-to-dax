@@ -117,12 +117,16 @@ def _predicate(predicate: Predicate, model: SemanticModel) -> str:
     if (
         predicate.operator == "IN"
         and isinstance(predicate.left, ColumnRef)
-        and isinstance(predicate.right, list)
+        and isinstance(predicate.right, list | tuple)
     ):
         values = ", ".join(
             _literal(item.value) for item in predicate.right if isinstance(item, LiteralValue)
         )
         return f"{_column(predicate.left, model)} IN {{{values}}}"
+    if predicate.operator == "IS NULL" and isinstance(predicate.left, ColumnRef):
+        return f"ISBLANK({_column(predicate.left, model)})"
+    if predicate.operator == "IS NOT NULL" and isinstance(predicate.left, ColumnRef):
+        return f"NOT ISBLANK({_column(predicate.left, model)})"
     if isinstance(predicate.left, ColumnRef) and isinstance(predicate.right, LiteralValue):
         left = _column(predicate.left, model)
         right = _literal(predicate.right.value)

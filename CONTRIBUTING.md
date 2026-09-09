@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome, but the project is intentionally conservative.
+Contributions are welcome, but the project is intentionally conservative. The aim is trustworthy translation, not maximum syntax coverage.
 
 ## Rules for New SQL Support
 
@@ -8,7 +8,7 @@ Every new SQL construct must include:
 
 1. A normalizer test proving the internal logical model.
 2. A DAX emitter or API test proving exact output.
-3. A golden query fixture or test case.
+3. A supported or unsupported golden fixture.
 4. Documentation in `docs/support-matrix.md`.
 5. Stable diagnostic behavior for unsupported adjacent cases.
 
@@ -30,6 +30,12 @@ python -m mypy src
 python -m pytest --cov=sql_to_dax --cov-report=term-missing
 python -m build
 ```
+
+## Project Guides
+
+- `docs/contributor-guide/adding-sql-constructs.md`
+- `docs/contributor-guide/diagnostics.md`
+- `docs/contributor-guide/testing-strategy.md`
 
 ## Dependency Policy
 

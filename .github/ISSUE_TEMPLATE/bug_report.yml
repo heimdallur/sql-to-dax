@@ -1,0 +1,32 @@
+name: Bug report
+description: Report incorrect translation, diagnostics, or packaging behaviour.
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    id: sql
+    attributes:
+      label: SQL input
+      description: Provide the smallest SQL query that reproduces the issue.
+      render: sql
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual output
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected output or diagnostic
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Include package version, Python version, and any metadata file used.

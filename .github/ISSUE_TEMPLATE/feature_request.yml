@@ -1,0 +1,26 @@
+name: SQL construct support
+description: Request support for a SparkSQL construct or DAX emission pattern.
+title: "support: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: sql
+    attributes:
+      label: SQL pattern
+      render: sql
+    validations:
+      required: true
+  - type: textarea
+    id: dax
+    attributes:
+      label: Expected DAX shape
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: semantics
+    attributes:
+      label: Semantic assumptions
+      description: Describe required table relationships, measures, blanks/null behaviour, or model metadata.
+    validations:
+      required: true

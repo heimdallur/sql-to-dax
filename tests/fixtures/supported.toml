@@ -1,0 +1,19 @@
+[[case]]
+name = "simple_projection"
+sql = "SELECT region FROM sales"
+dax = "EVALUATE\nSELECTCOLUMNS('sales', \"region\", 'sales'[region])"
+
+[[case]]
+name = "filtered_projection"
+sql = "SELECT region FROM sales WHERE year = 2026"
+dax = "EVALUATE\nSELECTCOLUMNS(FILTER('sales', 'sales'[year] = 2026), \"region\", 'sales'[region])"
+
+[[case]]
+name = "grouped_count"
+sql = "SELECT region, COUNT(*) AS rows FROM sales GROUP BY region"
+dax = "EVALUATE\nSUMMARIZECOLUMNS('sales'[region], \"rows\", COUNTROWS('sales'))"
+
+[[case]]
+name = "in_predicate"
+sql = "SELECT region FROM sales WHERE region IN ('EMEA', 'APAC')"
+dax = "EVALUATE\nSELECTCOLUMNS(FILTER('sales', 'sales'[region] IN {\"EMEA\", \"APAC\"}), \"region\", 'sales'[region])"

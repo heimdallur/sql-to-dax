@@ -36,6 +36,9 @@ Issues = "https://github.com/heimdallur/sql-to-dax/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["src/sql_to_dax"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"src/sql_to_dax/py.typed" = "sql_to_dax/py.typed"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"

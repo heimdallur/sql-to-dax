@@ -1,25 +1,27 @@
 # sql-to-dax
 
-`sql-to-dax` is a conservative Python translator for a documented subset of Databricks SparkSQL analytical queries into DAX query expressions.
+`sql-to-dax` translates a documented subset of Databricks SparkSQL analytical queries into DAX query expressions.
 
-It is designed for correctness over breadth. Unsupported SQL fails with stable diagnostic codes rather than emitting plausible but wrong DAX.
+The project favours correctness over breadth. Unsupported or semantically unsafe SQL fails with stable diagnostics rather than emitting plausible but wrong DAX.
 
 ## Status
 
-Alpha. The package currently targets single-table analytical query patterns. It is not a general SQL-to-DAX compiler.
+Alpha. The package targets single-table analytical query patterns. It is not a general SQL-to-DAX compiler.
 
 ## Supported in v0.1
 
 - `SELECT column FROM table`
-- `WHERE` with basic column/literal predicates
-- `AND` / `OR`
+- aliased projections
+- `WHERE` with column/literal predicates
+- `=`, `<>`, `<`, `<=`, `>`, `>=`, `IN`, `IS NULL`, `IS NOT NULL`
+- `AND` / `OR` with deterministic parentheses
 - `GROUP BY`
 - `SUM`, `AVG`, `MIN`, `MAX`, `COUNT(*)`
 - `ORDER BY`
-- `LIMIT`
-- Optional metadata mapping for DAX table and column names
+- `LIMIT` via `TOPN`
+- optional TOML metadata mapping for DAX table and column names
 
-See [`docs/support-matrix.md`](docs/support-matrix.md) for details.
+See [`docs/support-matrix.md`](docs/support-matrix.md).
 
 ## Install
 
@@ -38,7 +40,7 @@ python -m pip install -e '.[dev]'
 ## Python API
 
 ```python
-from sql_to_dax import translate
+from sql_to_dax import explain, translate
 
 sql = """
 SELECT region, SUM(revenue) AS total_revenue
@@ -50,6 +52,7 @@ LIMIT 10
 """
 
 print(translate(sql))
+print(explain(sql).supported)
 ```
 
 Output:
@@ -86,12 +89,14 @@ region = "Region"
 revenue = "Revenue"
 ```
 
-## Design Principles
+## Documentation
 
-- Prefer explicit refusal over incorrect output.
-- Keep dependencies minimal and credible.
-- Treat SQL parsing, logical normalization, and DAX emission as separate concerns.
-- Make every supported construct executable through tests and golden cases.
+- [Architecture](docs/architecture.md)
+- [Support matrix](docs/support-matrix.md)
+- [Examples](docs/examples.md)
+- [Semantic model metadata](docs/semantic-model.md)
+- [Roadmap](docs/roadmap.md)
+- [Adding SQL constructs](docs/contributor-guide/adding-sql-constructs.md)
 
 ## Development Quality Gates
 
@@ -101,6 +106,10 @@ python -m mypy src
 python -m pytest --cov=sql_to_dax --cov-report=term-missing
 python -m build
 ```
+
+## Dependency Policy
+
+Runtime dependency surface is deliberately small. `sqlglot` is used for SQL parsing. The CLI, metadata loader, and data model use the Python standard library.
 
 ## License
 

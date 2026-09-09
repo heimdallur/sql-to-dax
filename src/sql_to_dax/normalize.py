@@ -154,6 +154,8 @@ def _limit(expression: exp.Expression) -> int | None:
 
 
 def _predicate(node: exp.Expression, source_table: str) -> Predicate:
+    if isinstance(node, exp.Paren):
+        return _predicate(cast(exp.Expression, node.this), source_table)
     if isinstance(node, exp.And):
         return Predicate(
             "AND",
@@ -185,10 +187,14 @@ def _predicate(node: exp.Expression, source_table: str) -> Predicate:
     if isinstance(node, exp.In):
         values = [_literal(item) for item in node.expressions]
         return Predicate("IN", _column(node.this, source_table), values)
+    if isinstance(node, exp.Not) and isinstance(node.this, exp.Is):
+        inner = node.this
+        if isinstance(inner.expression, exp.Null):
+            return Predicate("IS NOT NULL", _column(inner.this, source_table), None)
     if isinstance(node, exp.Is):
         right = node.expression
         if isinstance(right, exp.Null):
-            return Predicate("=", _column(node.this, source_table), LiteralValue(None))
+            return Predicate("IS NULL", _column(node.this, source_table), None)
     raise UnsupportedSqlError("unsupported.predicate", f"Unsupported predicate: {node}")
 
 
